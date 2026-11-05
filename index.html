@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Recibos piso</title>
+  <meta name="theme-color" content="#0f766e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Recibos">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="icon" href="icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1>Recibos</h1>
+    <button id="accountBtn" class="ghost small" hidden></button>
+  </header>
+
+  <main>
+    <!-- Configuración pendiente -->
+    <section id="setupView" class="card" hidden>
+      <h2>Falta configurar Google</h2>
+      <p>Abre <code>config.js</code> y pega tu <strong>ID de cliente OAuth</strong> de Google Cloud. Los pasos están en <code>README.md</code>.</p>
+    </section>
+
+    <!-- Login -->
+    <section id="loginView" class="hero" hidden>
+      <div class="hero-icon" aria-hidden="true">🧾</div>
+      <h2>Guarda tus comprobantes en Google Drive</h2>
+      <p>Haz una foto al ticket del cajero y se guardará ordenado por año y tipo en tu Drive, aunque pierdas o se borre el papel.</p>
+      <button id="loginBtn" class="primary big">Conectar Google Drive</button>
+      <p class="muted tiny">La app solo puede ver los archivos que ella misma crea en tu Drive.</p>
+    </section>
+
+    <!-- Principal -->
+    <section id="mainView" hidden>
+      <label class="capture" for="fileInput">
+        <span class="capture-icon" aria-hidden="true">📷</span>
+        <span>Nuevo comprobante</span>
+      </label>
+      <input id="fileInput" type="file" accept="image/*" capture="environment" hidden>
+      <label class="link-btn" for="galleryInput">o elegir una foto de la galería</label>
+      <input id="galleryInput" type="file" accept="image/*" hidden>
+
+      <div id="pendingBanner" class="banner warn" hidden></div>
+
+      <h3 class="section-title">Últimos 12 meses</h3>
+      <div id="statusGrid" class="status-grid"></div>
+
+      <div class="list-head">
+        <h3 class="section-title">Todos los comprobantes</h3>
+        <button id="refreshBtn" class="ghost small" aria-label="Actualizar">↻</button>
+      </div>
+      <div id="filters" class="chips"></div>
+      <div id="list"></div>
+    </section>
+  </main>
+
+  <!-- Formulario nuevo comprobante -->
+  <dialog id="formDialog">
+    <form id="receiptForm" method="dialog">
+      <div class="preview-wrap"><img id="preview" alt="Vista previa del comprobante"></div>
+      <label class="switch-row">
+        <input type="checkbox" id="enhance">
+        <span>Mejorar contraste (tickets descoloridos)</span>
+      </label>
+
+      <fieldset>
+        <legend>Tipo</legend>
+        <div id="tipoGroup" class="segmented"></div>
+      </fieldset>
+
+      <div class="row">
+        <label>Mes que pagas
+          <input type="month" id="periodo" required>
+        </label>
+        <label>Fecha del ingreso
+          <input type="date" id="fechaPago" required>
+        </label>
+      </div>
+      <label>Importe (€)
+        <input type="text" id="importe" inputmode="decimal" placeholder="Opcional, p. ej. 650,00" autocomplete="off">
+      </label>
+      <label>Nota
+        <input type="text" id="nota" placeholder="Opcional" maxlength="200" autocomplete="off">
+      </label>
+
+      <div class="actions">
+        <button type="button" id="cancelBtn" class="ghost">Cancelar</button>
+        <button type="submit" id="saveBtn" class="primary">Guardar en Drive</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Visor -->
+  <dialog id="viewerDialog">
+    <div class="viewer">
+      <div class="viewer-img"><img id="viewerImg" alt=""><div id="viewerLoading" class="muted">Cargando…</div></div>
+      <div id="viewerInfo" class="viewer-info"></div>
+      <div class="actions">
+        <button type="button" id="trashBtn" class="ghost danger">Papelera</button>
+        <a id="driveLink" class="ghost btn" target="_blank" rel="noopener">Abrir en Drive</a>
+        <button type="button" id="closeViewerBtn" class="primary">Cerrar</button>
+      </div>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="config.js"></script>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
