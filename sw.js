@@ -1,5 +1,5 @@
 // Service worker: permite abrir la app sin conexión (los datos vienen de Drive).
-const CACHE = "recibos-v1";
+const CACHE = "recibos-v2";
 const SHELL = ["./", "index.html", "styles.css", "app.js", "config.js", "manifest.webmanifest", "icon-192.png", "icon-512.png", "apple-touch-icon.png"];
 
 self.addEventListener("install", (e) => {
